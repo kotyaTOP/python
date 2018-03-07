@@ -27,8 +27,14 @@ def get_list_from_file(f_name):
     return a
 
 
-print(get_list_from_file('input.txt'))
-print(get_list_neg_begin([-1, 1, -2, 2, -3, 3, -4]))
-print(get_list_neg_begin([-1, 1, -2, 2, -3, 3]))
-print(get_list_neg_begin([1, 1, -2, 2, -3, 3, -4]))
-print(get_list_neg_begin([1, 1, -2, 2, -3, 3]))
+def print_to_file(list_for_print, f_name):
+    f = open(f_name, 'w')
+    f.write(' '.join(map(str, list_for_print)))
+    f.close()
+
+
+print_to_file(get_list_from_file('res/input.txt'), 'res/output1.txt')
+print_to_file(get_list_neg_begin([-1, 1, -2, 2, -3, 3, -4]), 'res/output2.txt')
+print_to_file(get_list_neg_begin([-1, 1, -2, 2, -3, 3]), 'res/output3.txt')
+print_to_file(get_list_neg_begin([1, 1, -2, 2, -3, 3, -4]), 'res/output4.txt')
+print_to_file(get_list_neg_begin([1, 1, -2, 2, -3, 3]), 'res/output5.txt')
