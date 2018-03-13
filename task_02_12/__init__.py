@@ -10,7 +10,7 @@ def print_matrix_to_file(matrix, f_name):
     # b = [str(item) for item in matrix]
     result = [' '.join(item) for item in matrix]
     for item in result:
-        f.write(item+'\n')
+        f.write(item + '\n')
     f.close()
 
 
