@@ -30,6 +30,5 @@ def get_top_from_multiple(mult_list):
 
 
 all_mult = get_parallel_multiplies(get_line_koef_list_from_file('res/input.txt'))
-print(all_mult)
 for i in all_mult.values():
     print(get_top_from_multiple(i))

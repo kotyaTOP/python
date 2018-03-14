@@ -17,7 +17,7 @@ def print_matrix_to_file(matrix, f_name):
 def get_cut_matrix(matrix):
     row_count = len(list(matrix))
     column_count = min([len(item) for item in matrix])
-    a = min({row_count, column_count})
+    a = min(row_count, column_count)
     for iter_var in range(a):
         matrix[iter_var] = matrix[iter_var][:a]
     matrix = matrix[:a]
