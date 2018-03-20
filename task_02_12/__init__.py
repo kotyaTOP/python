@@ -10,14 +10,14 @@ def print_matrix_to_file(matrix, f_name):
     # b = [str(item) for item in matrix]
     result = [' '.join(item) for item in matrix]
     for item in result:
-        f.write(item+'\n')
+        f.write(item + '\n')
     f.close()
 
 
 def get_cut_matrix(matrix):
     row_count = len(list(matrix))
     column_count = min([len(item) for item in matrix])
-    a = min({row_count, column_count})
+    a = min(row_count, column_count)
     for iter_var in range(a):
         matrix[iter_var] = matrix[iter_var][:a]
     matrix = matrix[:a]
