@@ -52,11 +52,35 @@ def get_square(triangle):
     return sqrt(p * (p - a) * (p - b) * (p - c))
 
 
-def get_max_square(points_list):
-    return reduce(lambda max_triangle, cur_triangle: cur_triangle if get_square(cur_triangle) >= get_square(
-        max_triangle) else max_triangle, combinations(points_list, 3))
+# def get_max_square(points_list):
+#     return reduce(lambda max_triangle, cur_triangle: cur_triangle if get_square(cur_triangle) >= get_square(
+#         max_triangle) else max_triangle, gen_of_triangle(points_list))
 
 
-list = get_points_list_from_file('res/input.txt')
-print(get_list_from_points((get_max_square(list))))
-print_points_to_file(get_list_from_points((get_max_square(list))), 'res/output.txt')
+def gen_of_triangle(points_list):
+    for i in range(len(points_list)):
+        for k in range(len(points_list))[i + 1:]:
+            for l in range(len(points_list))[k + 1:]:
+                yield (points_list[i], points_list[k], points_list[l])
+
+
+def decorator(func):
+    def get_max_square(triangle_list):
+        square_dict = func(triangle_list)
+        return reduce(lambda max_triangle, cur_triangle: cur_triangle if square_dict[cur_triangle] >= square_dict[
+            max_triangle] else max_triangle, square_dict.keys())
+    return get_max_square
+
+
+@decorator
+def get_square_dict(triangle_list):
+    square_dict = {}
+    for i in triangle_list:
+        square_dict[i] = get_square(i)
+    return square_dict
+
+
+input_list = gen_of_triangle(get_points_list_from_file('res/input.txt'))
+max_square = get_square_dict(input_list)
+print(get_list_from_points((max_square)))
+print_points_to_file(get_list_from_points(max_square), 'res/output.txt')

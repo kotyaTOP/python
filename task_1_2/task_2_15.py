@@ -1,4 +1,13 @@
+def decorator(func):
+    def swapper_for_cycle_shift(args, n):
+        new_args = [func(list_item, n) for list_item in args]
+        return func(new_args, n)
+    return swapper_for_cycle_shift
+
+
+@decorator
 def cycle_shift(array, n):
+    n = n % len(array)
     slice_list = array[(len(array) - n):]
     slice_list.extend(array[:len(array) - n])
     return slice_list
@@ -18,8 +27,8 @@ def print_matrix_to_file(matrix, f_name):
     f.close()
 
 
-n = 3
+n = 5
 l = get_matrix_from_file('res/input.txt')
-result = [cycle_shift(list_item, n) for list_item in l]
-print(cycle_shift(result, n))
-print_matrix_to_file(cycle_shift(result, n), 'res/output.txt')
+answer = cycle_shift(l, n)
+print_matrix_to_file(answer, 'res/output.txt')
+print(answer)
