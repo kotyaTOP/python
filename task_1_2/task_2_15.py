@@ -13,6 +13,7 @@ def cycle_shift(array, n):
     return slice_list
 
 
+
 def get_matrix_from_file(f_name):
     with open(f_name, 'r') as f:
         return [str(str(item).replace('\n', '')).split(' ') for item in f.readlines()]
