@@ -3,6 +3,7 @@ def cycle_shift(array, n):
     slice.extend(array[:len(array) - n])
     return slice
 
+
 def get_matrix_from_file(f_name):
     f = open(f_name, 'r')
     a = [str(str(item).replace('\n', '')).split(' ') for item in f.readlines()]
