@@ -1,6 +1,4 @@
 from math import sqrt
-from itertools import combinations
-from functools import reduce
 
 
 def get_points_list_from_file(file_name):
@@ -15,13 +13,26 @@ def print_triangle_to_file(triangle_list, file_name):
     # result = [' '.join(item) for item in triangle]
     for triangle in triangle_list:
         for point in triangle:
-            f.write('('+' '.join(point)+') ')
+            f.write('(' + ' '.join(point) + ') ')
         f.write('\n')
     f.close()
 
 
-def get_triangle_list(points_list):
-    return combinations(points_list, 3)
+# def get_triangle_list(points_list):
+# return combinations(points_list, 3)
+
+
+def gen_of_triangle(points_list):
+    i = 0
+    while i < len(points_list):
+        j = i + 1
+        while j < len(points_list):
+            k = j + 1
+            while k < len(points_list):
+                yield (points_list[i], points_list[j], points_list[k])
+                k += 1
+            j += 1
+        i += 1
 
 
 def get_len_line(p1, p2):
@@ -40,7 +51,8 @@ def sort_triangle(triangle_list):
     return sorted(triangle_list, key=lambda triangle: get_square(triangle))
 
 
-input_list = list(get_triangle_list(get_points_list_from_file('res/input.txt')))
-sorted_list = sort_triangle(input_list)
+triangle_list = list(gen_of_triangle(get_points_list_from_file('res/input.txt')))
+print(triangle_list)
+sorted_list = sort_triangle(triangle_list)
 print(sorted_list)
 print_triangle_to_file(sorted_list, 'res/output.txt')
