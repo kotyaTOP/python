@@ -25,6 +25,31 @@ list = get_list_from_file('inputlist.txt')
 print(list)
 
 
+def get_answer(list):
+    list_max = []
+    list_tmp = []
+    for i in list:
+        sum_tmp = sum(list_tmp)
+        sum_max = sum(list_max)
+        if sum_tmp + i >= 0:
+            list_tmp.append(i)
+        if sum_tmp + i < 0:
+            if sum_tmp > sum_max:
+                list_max = list_tmp
+            elif sum_tmp == sum_max:
+                if len(list_tmp) < len(list_max):
+                    list_max = list_tmp
+            list_tmp = []
+    return list_max
+
+
+list = get_answer(list)
+print(list)
+
+f = open('answerlist.txt', 'w')
+f.write(', '.join(map(str, list)))
+f.close()
+
 # def get_answer(s):
 #    answer_list=[]
 #    s.append(' ')
@@ -59,42 +84,4 @@ print(list)
 #        i += 1
 #    return answer_list
 
-
-def get_answer(list):
-    answer_list = []
-    list.append(' ')
-    count_max = 0
-    count_tmp = 0
-    sum_max = 0
-    sum_tmp = 0
-    last = 0
-    for i in range(len(list)):
-        if list[i] != ' ' and  sum_tmp + int(list[i]) >= 0:
-            sum_tmp += int(list[i])
-            count_tmp += 1
-        if list[i] == ' ' or sum_tmp + int(list[i]) < 0:
-            if sum_tmp > sum_max:
-                sum_max = sum_tmp
-                count_max = count_tmp
-                last = i
-            elif sum_tmp == sum_max:
-                if count_tmp < count_max:
-                    sum_max = sum_tmp
-                    count_max = count_tmp
-                    la7\,st = i
-            count_tmp = 0
-            sum_tmp = 0
-    i = last - count_max
-    while i < last:
-        answer_list.append(list[i])
-        i += 1
-    return answer_list
-
-
-list = get_answer(list)
-print(list)
-
-f = open('answerlist.txt', 'w')
-f.write(', '.join(map(str, list)))
-f.close()
 # return answerList
