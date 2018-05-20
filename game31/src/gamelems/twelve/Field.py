@@ -7,19 +7,21 @@ from src.gamelems.twelve.Square import Square
 
 class Field:
 
-    def __init__(self, col_count: int, row_count: int):
+    def __init__(self, row_count: int, col_count: int):
         self.col_count = col_count
         self.row_count = row_count
-        self.matrix = [
-            [None, None, None, None, None],
-            [None, None, None, None, None],
-            [None, None, None, None, None],
-            [None, None, None, None, None],
-            [None, None, None, None, None]]
-        # self.matrix = [[None, None, None], [None, None, None], [None, None, None]]
+        self.matrix = []
+        self.create_field()
         self.add_random_square()
         self.add_random_square()
         self.add_random_square()
+
+    def create_field(self):
+        for r in range(self.row_count):
+            one_row = []
+            for c in range(self.col_count):
+                one_row.append(None)
+            self.matrix.append(one_row)
 
     def none_count(self):
         count = 0
@@ -29,6 +31,9 @@ class Field:
                     count += 1
         return count
 
+    def check_lose(self):
+        return not self.none_count()
+
     def add_random_square(self):
         new_place = randint(1, self.none_count())
         count = 0
@@ -37,9 +42,19 @@ class Field:
                 if square is None:
                     count += 1
                     if count == new_place:
-                        new_square = Square(y, x, randint(1, 3))
+                        new_square = Square(y, x, self.random())
                         self.matrix[y][x] = new_square
                         break
+
+    @staticmethod
+    def random():
+        percent = randint(1, 15)
+        if percent <= 10:
+            return 1
+        if 10 < percent <= 13:
+            return 2
+        if percent >= 14:
+            return 3
 
     def add_square(self, square: Square, new_row, new_col):
         square.col = new_col

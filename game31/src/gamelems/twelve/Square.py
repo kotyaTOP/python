@@ -4,6 +4,7 @@ class Square:
         self.row = row
         self.col = col
         self.val = val
+        self.select = False
 
     def __copy__(self):
         return Square(self.row, self.col, self.val)
