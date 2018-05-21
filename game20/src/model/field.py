@@ -1,7 +1,7 @@
 from __future__ import print_function
 
-from model.player import Player
-from model.boxes import *
+from src.model.player import Player
+from src.model.boxes import *
 from math import fabs
 
 
@@ -33,7 +33,7 @@ class Field:
                     box_move_list.append((self.box_matrix[new_y][new_x], new_x + kx, new_y + ky))
                     new_x += kx
                     new_y += ky
-                    if not (0 <= new_x < self.width and 0 <= new_y <= self.height):
+                    if not (0 <= new_x < self.width and 0 <= new_y < self.height):
                         return False
         list.reverse(box_move_list)
         for item in box_move_list:
