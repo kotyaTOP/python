@@ -1,4 +1,4 @@
-from model.actions.moveact import *
+from src.model.actions.moveact import *
 
 
 class Player(HasCords):

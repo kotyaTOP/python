@@ -1,6 +1,6 @@
-from model.directions import Direction
+from src.model.directions import Direction
 from math import fabs
-from model.actions.moveact import *
+from src.model.actions.moveact import *
 
 
 class Box(HasCords):
@@ -24,7 +24,9 @@ class SlideBox(Box, Movable):
             return False
         move_direction = Direction.Horizontal if new_x != self.x else Direction.Vertical
         dir_cond = self.direction == Direction.Both or self.direction == move_direction
-        range_cond = fabs(self.x - new_x) <= 1 and fabs(fabs(self.x - new_x) - fabs(self.y - new_y)) == 1
+        range_x_cond = fabs(self.x - new_x) <= 1
+        range_y_cond = fabs(self.y - new_y) <= 1
+        range_cond = fabs(fabs(self.x - new_x) - fabs(self.y - new_y)) == 1
         return dir_cond and range_cond
 
     def __str__(self) -> str:
