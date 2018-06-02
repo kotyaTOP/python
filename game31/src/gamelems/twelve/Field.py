@@ -11,19 +11,19 @@ class Field:
         self.col_count = col_count
         self.row_count = row_count
         self.matrix = []
-        self.create_field()
-        self.add_random_square()
-        self.add_random_square()
-        self.add_random_square()
+        self.__create_field()
+        self.__add_random_square()
+        self.__add_random_square()
+        self.__add_random_square()
 
-    def create_field(self):
+    def __create_field(self):
         for r in range(self.row_count):
             one_row = []
             for c in range(self.col_count):
                 one_row.append(None)
             self.matrix.append(one_row)
 
-    def none_count(self):
+    def __none_count(self):
         count = 0
         for row in self.matrix:
             for elem in row:
@@ -32,10 +32,10 @@ class Field:
         return count
 
     def check_lose(self):
-        return not self.none_count()
+        return not self.__none_count()
 
-    def add_random_square(self):
-        new_place = randint(1, self.none_count())
+    def __add_random_square(self):
+        new_place = randint(1, self.__none_count())
         count = 0
         for y, row in enumerate(self.matrix):
             for x, square in enumerate(row):
@@ -56,7 +56,7 @@ class Field:
         if percent >= 14:
             return 3
 
-    def add_square(self, square: Square, new_row, new_col):
+    def __add_square(self, square: Square, new_row, new_col):
         square.col = new_col
         square.row = new_row
         self.matrix[new_row][new_col] = Square(new_row, new_col, square.val)
@@ -67,20 +67,20 @@ class Field:
     def move_square(self, square: Square, new_row, new_col):
         if self.has_ways(square, new_row, new_col):
             if self.matrix[new_row][new_col] is None:
-                self.simple_move(square, new_row, new_col)
+                self.__simple_move(square, new_row, new_col)
             else:
                 val2 = self.matrix[new_row][new_col].val
                 if val2 == square.val:
                     square2 = Square(new_row, new_col, val2)
-                    self.merge_square(square, square2)
-                    self.add_square(square2, square2.row, square2.col)
+                    self.__merge_square(square, square2)
+                    self.__add_square(square2, square2.row, square2.col)
 
-    def simple_move(self, square: Square, new_row, new_col):
+    def __simple_move(self, square: Square, new_row, new_col):
         tmp_square = square.__copy__()
-        self.add_square(tmp_square, new_row, new_col)
+        self.__add_square(tmp_square, new_row, new_col)
         self.delete_square(square)
 
-    def merge_square(self, square1: Square, square2: Square):
+    def __merge_square(self, square1: Square, square2: Square):
         self.delete_square(square1)
         square2.val += 1
 
@@ -94,7 +94,7 @@ class Field:
                 nei_list.append([neighbour_row, neighbour_col])
         return nei_list
 
-    def add_nodes(self):
+    def __add_nodes(self):
         g = nx.Graph()
         for x, row in enumerate(self.matrix):
             for y, elem in enumerate(row):
@@ -102,7 +102,7 @@ class Field:
                     g.add_node((x, y))
         return g
 
-    def add_edges(self, g: nx.Graph):
+    def __add_edges(self, g: nx.Graph):
         for node in g:
             neighbour_list = self.get_nei_list(node[0], node[1])
             if len(neighbour_list) > 0:
@@ -111,12 +111,44 @@ class Field:
                         g.add_edge(node, (neighbour[0], neighbour[1]))
         return g.edges()
 
-    def find_way(self, row1, col1, row2, col2):
-        g = self.add_nodes()
+    def __find_way(self, row1, col1, row2, col2):
+        g = self.__add_nodes()
         g.add_node((row1, col1))
         g.add_node((row2, col2))
-        g.add_edges_from(self.add_edges(g))
+        g.add_edges_from(self.__add_edges(g))
         return nx.has_path(g, (row1, col1), (row2, col2))
 
     def has_ways(self, square1: Square, new_row: int, new_col: int):
-        return self.find_way(square1.row, square1.col, new_row, new_col)
+        return self.__find_way(square1.row, square1.col, new_row, new_col)
+
+    def select_square(self, square: Square):
+        if self.__count_select() == 0:
+            square.select = True
+        else:
+            if self.__count_select() == 1:
+                if square.select:
+                    square.select = False
+                else:
+                    square2 = self.get_select_square()
+                    if square.val == square2.val:
+                        if self.has_ways(square2, square.row, square.col):
+                            square2.select = False
+                            self.move_square(square2, square.row, square.col)
+                            self.__add_random_square()
+                    else:
+                        square.select = True
+                        square2.select = False
+
+    def __count_select(self):
+        count = 0
+        for row in self.matrix:
+            for elem in row:
+                if elem is not None and elem.select:
+                    count += 1
+        return count
+
+    def get_select_square(self):
+        for row in self.matrix:
+            for elem in row:
+                if elem is not None and elem.select:
+                    return elem

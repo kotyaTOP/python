@@ -1,5 +1,6 @@
 from random import randint
 import networkx as nx
+from math import sin, cos, pi
 from src.Circle import *
 
 
@@ -10,10 +11,10 @@ class Field:
         self.col_count = col_count
         self.matrix = []
         self.create_matrix()
-        self.add_random_circle()
-        self.add_random_circle()
-        self.add_random_circle()
         self.add_little_circle()
+        self.add_little_circle()
+        self.add_little_circle()
+        self.add_random_little_circles()
 
     def create_matrix(self):
         for r in range(self.row_count):
@@ -31,6 +32,7 @@ class Field:
         return count
 
     def add_random_little_circles(self):
+        self.transform_little_circle()
         if self.none_count() > 0:
             if self.none_count() >= 3:
                 self.add_little_circle()
@@ -38,10 +40,10 @@ class Field:
                 self.add_little_circle()
             else:
                 if self.none_count() == 2:
-                    self.add_random_circle()
-                    self.add_random_circle()
+                    self.add_little_circle()
+                    self.add_little_circle()
                 else:
-                    self.add_random_circle()
+                    self.add_little_circle()
 
     def add_little_circle(self):
         new_place = randint(1, self.none_count())
@@ -51,27 +53,15 @@ class Field:
                 if square is None:
                     count += 1
                     if count == new_place:
-                        new_circle = LittleCircle(y, x, randint(1, 6))
+                        new_circle = LittleCircle(y, x, randint(1, 7))
                         self.matrix[y][x] = new_circle
                         break
 
-    def add_random_circle(self):
-        new_place = randint(1, self.none_count())
-        count = 0
-        for y, row in enumerate(self.matrix):
-            for x, square in enumerate(row):
-                if square is None:
-                    count += 1
-                    if count == new_place:
-                        new_circle = Circle(y, x, randint(1, 6))
-                        self.matrix[y][x] = new_circle
-                        break
-
-    def transform_little_circle(self, circle):
+    def transform_little_circle(self):
         for row in self.matrix:
             for elem in row:
-                if elem is LittleCircle:
-                    circle = Circle(elem.row, elem.col, elem.val)
+                if type(elem) is LittleCircle:
+                    self.add_circle(Circle(elem.row, elem.col, elem.val), elem.row, elem.col)
 
     def check_lose(self):
         return not self.none_count()
@@ -86,29 +76,26 @@ class Field:
 
     def move_circle(self, circle: Circle, new_row, new_col):
         if self.has_ways(circle, new_row, new_col):
-            if self.matrix[new_row][new_col] is not Circle:
+            if type(self.matrix[new_row][new_col]) is not Circle:
                 tmp_circle = circle.__copy__()
                 self.add_circle(tmp_circle, new_row, new_col)
                 self.delete_circle(circle)
 
-    def get_nei_list(self, i, j):
+    def get_nei_list(self, row, col):
         nei_list = []
-        k = i - 1
-        while k <= i + 1:
-            l = j - 1
-        while l <= j + 1:
-            if 0 <= k < len(self.matrix) and 0 <= l < len(self.matrix[0]):
-                if k != i or l != j:
-                    nei_list.append(self.matrix[k][l])
-        l += 1
-        k += 1
+        for a in range(3):
+            rad = a * pi / 2
+            neighbour_row = row - int(sin(rad))
+            neighbour_col = col + int(cos(rad))
+            if 0 <= neighbour_row < len(self.matrix) and 0 <= neighbour_col < len(self.matrix[0]):
+                nei_list.append([neighbour_row, neighbour_col])
         return nei_list
 
     def add_nodes(self):
         g = nx.Graph()
         for x, row in enumerate(self.matrix):
             for y, elem in enumerate(row):
-                if elem is not Circle:
+                if type(elem) is not Circle:
                     g.add_node((x, y))
         return g
 
@@ -132,45 +119,46 @@ class Field:
         return self.find_way(circle.row, circle.col, new_row, new_col)
 
     def check_delete(self, circle):
-        self.check_hor_ver(circle)
-        self.check_dial_ver(circle)
+        return self.check_hor_ver(circle) or self.check_dial_ver(circle)
 
     def check_hor_ver(self, circle):
         hor_friends = self.find_hor_friends(circle)
         ver_friends = self.find_ver_friends(circle)
         if len(ver_friends) >= 5:
             if len(hor_friends) >= 5:
-                ver_friends.remove(circle)
-                hor_friends.extend(ver_friends)
-            else:
-                hor_friends = ver_friends
-            for friend in hor_friends:
+                hor_friends.remove(circle)
+                ver_friends.extend(hor_friends)
+            for friend in ver_friends:
                 self.delete_circle(friend)
+            return True
         else:
             if len(hor_friends) >= 5:
                 for friend in hor_friends:
                     self.delete_circle(friend)
+                return True
+            return False
 
     def check_dial_ver(self, circle):
         pos_friends = self.find_pos_dial_friends(circle)
         neg_friends = self.find_neg_dial_friends(circle)
         if len(neg_friends) >= 5:
             if len(pos_friends) >= 5:
-                neg_friends.remove(circle)
-                pos_friends.extend(neg_friends)
-            else:
-                pos_friends = neg_friends
-            for friend in pos_friends:
+                pos_friends.remove(circle)
+                neg_friends.extend(pos_friends)
+            for friend in neg_friends:
                 self.delete_circle(friend)
+            return True
         else:
             if len(pos_friends) >= 5:
                 for friend in pos_friends:
                     self.delete_circle(friend)
+                return True
+            return False
 
     def find_hor_friends(self, circle: Circle):
         friends = [circle]
         i = circle.col + 1
-        while i < self.col_count and self.matrix[circle.row][i] is not None and \
+        while i < self.col_count and type(self.matrix[circle.row][i]) is Circle and \
                 self.matrix[circle.row][i].val == circle.val:
             friends.append(self.matrix[circle.row][i])
             i += 1
@@ -183,16 +171,15 @@ class Field:
 
     def find_ver_friends(self, circle: Circle):
         friends = [circle]
-        reverse_matrix = [[row[i] for row in self.matrix] for i in range(len(self.matrix[0]))]
         i = circle.row + 1
-        while i < self.row_count and self.matrix[i][circle.col] is not None and \
+        while i < self.row_count and type(self.matrix[i][circle.col]) is Circle and \
                 self.matrix[i][circle.col].val == circle.val:
             friends.append(self.matrix[i][circle.col])
             i += 1
         j = circle.row - 1
-        while j >= 0 and self.matrix[j][circle.col] is not None and \
+        while j >= 0 and type(self.matrix[j][circle.col]) is Circle and \
                 self.matrix[j][circle.col].val == circle.val:
-            friends.append(self.matrix[i][circle.col])
+            friends.append(self.matrix[j][circle.col])
             j -= 1
         return friends
 
@@ -200,30 +187,38 @@ class Field:
         friends = [circle]
         i = circle.col + 1
         while i < self.col_count and circle.row + i - circle.col < self.row_count and \
-                self.matrix[circle.row + i - circle.col][i] is not None and \
+                type(self.matrix[circle.row + i - circle.col][i]) is Circle and \
                 self.matrix[circle.row + i - circle.col][i].val == circle.val:
             friends.append(self.matrix[circle.row + i - circle.col][i])
             i += 1
         j = circle.col - 1
-        while j >= 0 and circle.row - j + circle.col >= 0 and self.matrix[circle.row - j + circle.col][j] is not None \
-                and self.matrix[circle.row - j + circle.col][j].val == circle.val:
-            friends.append(self.matrix[circle.row - j + circle.col][j])
+        while j >= 0 and circle.row + j - circle.col >= 0 and \
+                type(self.matrix[circle.row + j - circle.col][j]) is Circle \
+                and self.matrix[circle.row + j - circle.col][j].val == circle.val:
+            friends.append(self.matrix[circle.row + j - circle.col][j])
             j -= 1
         return friends
 
     def find_neg_dial_friends(self, circle: Circle):
         friends = [circle]
         i = circle.col + 1
-        while i < self.col_count and circle.row - i + circle.col < self.row_count and \
+        while i < self.col_count and circle.row - i + circle.col >= 0 and \
                 self.matrix[circle.row - i + circle.col][i] is not None and \
                 self.matrix[circle.row - i + circle.col][i].val == circle.val:
             friends.append(self.matrix[circle.row - i + circle.col][i])
             i += 1
         j = circle.col - 1
-        while j >= 0 and circle.row + j - circle.col >= 0 and self.matrix[circle.row + j - circle.col][j] is not None \
-                and self.matrix[circle.row + j - circle.col][j].val == circle.val:
-            friends.append(self.matrix[circle.row + j - circle.col][j])
+        while j >= 0 and circle.row - j + circle.col < self.row_count \
+                and self.matrix[circle.row - j + circle.col][j] is not None \
+                and self.matrix[circle.row - j + circle.col][j].val == circle.val:
+            friends.append(self.matrix[circle.row - j + circle.col][j])
             j -= 1
         return friends
 
-
+    def get_little_circle(self):
+        lc = []
+        for row in self.matrix:
+            for elem in row:
+                if type(elem) is LittleCircle:
+                    lc.append((elem.row, elem.col))
+        return lc

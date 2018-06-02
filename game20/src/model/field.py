@@ -35,6 +35,8 @@ class Field:
                     new_y += ky
                     if not (0 <= new_x < self.width and 0 <= new_y < self.height):
                         return False
+        if len(box_move_list)>1:
+            return False
         list.reverse(box_move_list)
         for item in box_move_list:
             self.__move_unit(item[0].x, item[0].y, item[1], item[2])
@@ -93,7 +95,7 @@ class Field:
                         if type_of_elem is Player:
                             typed_elem = Player(x, y)
                             self.player = type_of_elem
-                            self.player.x = x  # fixme doesn't work without self.player.x = x and self.player.y = y
+                            self.player.x = x
                             self.player.y = y
                         if typed_elem is None:
                             raise ValueError
