@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div><span class="title">Штирлиц v1.0</span></div>
+    <form action="http://localhost:5000/index" method="post">
+        <label>
+            <textarea name="textForDecode" rows="10" cols="70"></textarea>
+        </label>
+        <input type="submit" value="Decode">
+    </form>
+    {% if o_data %}
+        <p><h2>Результат:</h2>
+        <section class="result">
+            <article>Исходная кодировка: <span class="original_encoding">{{ org_enc }}</span></article>
+            {% if data %}
+                <article>Раскодированный текст: <span class="result_data">{{ data }}</span></article>
+            {% endif %}
+            <article>Исходный текст: <span class="original_data">{{ o_data }}</span></article>
+        </section>
+    {% endif %}
+{% endblock %}

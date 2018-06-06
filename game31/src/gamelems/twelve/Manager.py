@@ -4,14 +4,15 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QMessageBox
 from src.gamelems.twelve.Field import *
-from src.gamelems.twelve.Draw import *
+from src.gamelems.twelve.Window import *
 
 
-class Presenter:
+class Manager:
 
     def __init__(self, field: Field, window: My_Window):
         self.field = field
         self.window = window
+        self.theme_dict = None
 
     def paint(self, qp: QPainter):
         self.draw_field(qp)
@@ -41,15 +42,24 @@ class Presenter:
         for y, row in enumerate(self.field.matrix):
             for x, elem in enumerate(row):
                 col1 = QColor(0, 0, 0)
-                col1.setNamedColor('#FFDAB9')
+                if self.theme_dict == 0:
+                    col1.setNamedColor('#FFDAB9')
+                else:
+                    col1.setNamedColor('#FFFFFF')
                 col2 = QColor(0, 0, 0)
-                col2.setNamedColor('#FFEFD5')
+                if self.theme_dict == 0:
+                    col2.setNamedColor('#FFEFD5')
+                else:
+                    col2.setNamedColor('#000000')
                 painter.setPen(col2)
                 painter.setFont(QFont('Decorative', 40))
                 painter.setBrush(col1)
                 painter.drawRect(kx * x + 2, ky * y + 2, kx - 4, ky - 4)
                 if elem is not None:
-                    col1.setNamedColor(self.get_color(elem.val))
+                    if self.theme_dict == 0:
+                        col1.setNamedColor(self.get_color(elem.val))
+                    else:
+                        col1.setNamedColor(self.get_color2(elem.val))
                     painter.setBrush(col1)
                     number = str(elem.val)
                     width = QFontMetrics.width(painter.fontMetrics(), number)
@@ -81,50 +91,40 @@ class Presenter:
             return '#483D8B'
         return '#8B008B'
 
+    @staticmethod
+    def get_color2(val: int):
+        if val == 1:
+            return '#00FF00'
+        if val == 2:
+            return '#20B2AA'
+        if val == 3:
+            return '#FFFF00'
+        if val % 4 == 0:
+            return '#8B008B'
+        if val % 5 == 0:
+            return '#00FFFF'
+        if val % 6 == 0:
+            return '#800000'
+        if val % 7 == 0:
+            return '#008000'
+        if val % 9 == 0:
+            return '#FA8072'
+        if val % 11 == 0:
+            return '#000080'
+        return '#ADFF2F'
+
     def click(self, x: int, y: int):
         row = self.get_square(x, y)[0]
         col = self.get_square(x, y)[1]
         square = self.field.matrix[row][col]
         if square is not None:
-            self.select_square(square)
+            self.field.select_square(square)
         else:
-            if self.count_select() == 1:
-                square2 = self.get_select_square()
+            if self.field.count_select() == 1:
+                square2 = self.field.get_select_square()
                 if self.field.has_ways(square2, row, col):
                     self.field.move_square(square2, row, col)
                     self.field.add_random_square()
-
-    def select_square(self, square: Square):
-        if self.count_select() == 0:
-            square.select = True
-        else:
-            if self.count_select() == 1:
-                if square.select:
-                    square.select = False
-                else:
-                    square2 = self.get_select_square()
-                    if square.val == square2.val:
-                        if self.field.has_ways(square2, square.row, square.col):
-                            square2.select = False
-                            self.field.move_square(square2, square.row, square.col)
-                            self.field.add_random_square()
-                    else:
-                        square.select = True
-                        square2.select = False
-
-    def count_select(self):
-        count = 0
-        for row in self.field.matrix:
-            for elem in row:
-                if elem is not None and elem.select:
-                    count += 1
-        return count
-
-    def get_select_square(self):
-        for row in self.field.matrix:
-            for elem in row:
-                if elem is not None and elem.select:
-                    return elem
 
     def get_square(self, x: int, y: int):
         size = self.window.geometry()
@@ -145,7 +145,10 @@ class Presenter:
         x = col * kx
         y = row * ky
         col = QColor(0, 0, 0)
-        col.setNamedColor('#00FFFF')
+        if self.theme_dict == 0:
+            col.setNamedColor('#00FFFF')
+        else:
+            col.setNamedColor('#FF0000')
         pen = QPen(col, 3, Qt.SolidLine)
         painter.setPen(pen)
         painter.drawLine(x + 10, y + 10, x + kx - 10, y + 10)

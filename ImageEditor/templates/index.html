@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form action="http://localhost:5000/transform" method="post" enctype="multipart/form-data">
+        <input type="file" name="f">
+        <input type="submit" value="Загрузить"/>
+    </form>
+    {% if fname %}
+        <img height="{{ image_height }}px" width="{{ image_width }}px"
+             src="http://localhost:5000/static/tmp_images/{{ fname }}"/>
+        <form action="http://localhost:5000/transform?type=contrast" method="post">
+            <input type="submit" value="+100 к контрастности"/>
+        </form>
+        <form action="http://localhost:5000/transform?type=brightness" method="post">
+            <input type="submit" value="+100 к яркости"/>
+        </form>
+        <form action="http://localhost:5000/transform?type=sharpness" method="post">
+            <input type="submit" value="+100 к остроте"/>
+        </form>
+    {% endif %}
+{% endblock %}

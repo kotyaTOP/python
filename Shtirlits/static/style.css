@@ -1,0 +1,54 @@
+.original_encoding {
+    text-transform: uppercase;
+    font-style: normal;
+}
+
+body {
+    background: #14e9ff;
+}
+
+.title {
+    font-size: 50px;
+    color: rgb(64, 27, 90);
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.result {
+    display: block;
+    border: 1px solid #53270b;
+    background: #e9b300;
+    margin: 10px 30px;
+    padding: 10px;
+}
+
+article {
+    font-style: italic;
+}
+
+.original_data, .result_data {
+    padding-left: 40px;
+    display: block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #534800;
+}
+
+input[type="submit"] {
+    width: 120px;
+    height: 35px;
+    font-size: 18px;
+    border-radius: 7px;
+    background: #247f96;
+    border: 1px solid #00132b;
+    color: #00132b;
+}
+
+input[type="submit"]:hover {
+    background: #259ab2;
+}
+
+input[type="submit"]:active {
+    background: #30c3e3;
+}
