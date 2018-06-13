@@ -89,7 +89,7 @@ class Field:
 
     def delete_empty_col(self):
         for x, col in enumerate(self.matrix):
-            while list.count(self.matrix[x], None) == len(self.matrix[x]):
+            while x < len(self.matrix) and list.count(self.matrix[x], None) == len(self.matrix[x]):
                 list.remove(self.matrix, self.matrix[x])
                 self.width -= 1
                 for x_p, col_p in enumerate(self.matrix[x:]):
