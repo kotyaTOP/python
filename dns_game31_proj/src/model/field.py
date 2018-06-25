@@ -96,3 +96,9 @@ class Field:
                     for y_p, elem_p in enumerate(col_p):
                         if elem_p is not None:
                             elem_p.x -= 1
+
+    def recolor(self):
+        for col in self.matrix:
+            for elem in col:
+                if elem is not None:
+                    elem.color = randint(1, 3)

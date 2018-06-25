@@ -17,13 +17,13 @@ def image(img=None):
     if img is not None:
         im = img
         parts = filename.split('.')
-        filename = parts[len(parts) - 2] + '.png'
+        filename = parts[len(parts) - 2] + 'e.png'
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         if os.path.isfile(file_path):
             os.remove(file_path)
         img.save(file_path, 'PNG')
     else:
-        im = Image.open(file_path)
+        im = Image.open(file_path)  # sanfneskfmenkfsejfk
 
     return render_template('index.html', fname=filename, image_width=im.size[0], image_height=im.size[1])
 
@@ -85,5 +85,4 @@ def transform_sharpness():
     return image(img=img)
 
 
-if __name__ == '__main__':
-    app.run()
+app.run()

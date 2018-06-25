@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QWidget, QToolTip)
+from PyQt5.QtWidgets import (QWidget, QToolTip, QMessageBox)
 from PyQt5.QtGui import QFont, QIcon, QPainter, QMouseEvent
 
 import tkinter as tk
@@ -37,5 +37,18 @@ class GameWindow(QWidget):
         y = event.y()
         self.presenter.click(x, y)
         qp.end()
+        self.paintEvent(None)
+        self.update()
+        if self.presenter.is_win():
+            self.win()
+
+    def win(self):
+        QMessageBox.about(self, 'Мои поздравления!', 'Вы победили!')
+
+    def keyPressEvent(self, e):
+        if e.key() in (ord('r'), ord('R'), ord('к'), ord('К')):
+            self.presenter.recolor()
+        if e.key() in (ord('a'), ord('A'), ord('ф'), ord('Ф')):
+            self.presenter.model.fill_line()
         self.paintEvent(None)
         self.update()

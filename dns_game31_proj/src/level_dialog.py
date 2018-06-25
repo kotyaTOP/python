@@ -18,6 +18,13 @@ class LevelWindow(QWidget):
         self.levels[0].presenter = Presenter(Field(5, 5), self.levels[0])
         self.levels[1].presenter = Presenter(Field(10, 7), self.levels[1])
         self.levels[2].presenter = Presenter(Field(14, 10), self.levels[2])
+
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+        self.levels[0].setGeometry(screen_width // 2 - 130, screen_height // 2 - 130, 264, 264)
+        self.levels[1].setGeometry(screen_width // 2 - 250, screen_height // 2 - 177, 500, 355)
+        self.levels[2].setGeometry(screen_width // 2 - 347, screen_height // 2 - 250, 694, 500)
+
         self.init_ui()
 
     def closeEvent(self, event):
@@ -77,7 +84,6 @@ class LevelWindow(QWidget):
         self.levels[2].presenter.start()
         self.levels[2].show()
         self.hide()
-
 
     def on_level_clicked(self, n: int):
         self.levels[n].presenter.start()

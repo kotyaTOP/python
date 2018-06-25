@@ -5,7 +5,7 @@ import requests as rq
 
 import _thread
 
-BACKLOG = 50  # how many pending connections queue will hold
+BACKLOG = 5000  # how many pending connections queue will hold
 MAX_DATA_RECV = 999999  # max number of bytes we receive at once
 DEBUG = True  # set to True to see the debug msgs
 BLOCKED = []  # just an example. Remove with [""] for no blocking at all.
@@ -85,10 +85,6 @@ Connection: keep-alive'''
             'GET ' + '' + url + ' \r\naccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8 \r\nAccept-Encoding: gzip, deflate, br \r\nAccept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7 \r\nCache-Control: no-cache \r\nConnection: keep-alive \r\nContent-Type: application/x-www-form-urlencoded \r\nPragma: no-cache \r\nUpgrade-Insecure-Requests: 1 \r\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36',
             encoding='utf-8')
 
-        for i in range(0, len(BLOCKED)):
-            if BLOCKED[i] in url:
-                conn.close()
-                sys.exit(1)
 
         # поиск веб-сервера и порта
         http_pos = url.find("://")  # поиск позиции ://
