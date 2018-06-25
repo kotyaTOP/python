@@ -1,8 +1,8 @@
 from __future__ import print_function
-from src.Circle import *
-from src.Game import *
-from src.Presenter import *
-from src.Window import *
+from Circle import *
+from Game import *
+from Presenter import *
+from Window import *
 
 
 my_field = Field(9, 9)

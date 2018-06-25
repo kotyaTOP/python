@@ -1,5 +1,6 @@
 from __future__ import print_function
 import sys
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget
 from src.gamelems.twelve.Field import *
 from src.gamelems.twelve.Square import *
