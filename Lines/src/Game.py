@@ -1,7 +1,7 @@
 from random import randint
 import networkx as nx
 from math import sin, cos, pi
-from Circle import *
+from src.Circle import *
 
 
 class Field:
@@ -15,7 +15,22 @@ class Field:
         self.add_little_circle()
         self.add_little_circle()
         self.add_random_little_circles()
+        self.score = 0
 
+    def create_matrix(self):
+        for r in range(self.row_count):
+            one_row = []
+            for c in range(self.col_count):
+                one_row.append(None)
+            self.matrix.append(one_row)
+
+    def none_count(self):
+        count = 0
+        for row in self.matrix:
+            for elem in row:
+                if elem is None:
+                    count += 1
+        return count
 
     def add_random_little_circles(self):
         self.transform_little_circle()
@@ -49,6 +64,15 @@ class Field:
                 if type(elem) is LittleCircle:
                     self.add_circle(Circle(elem.row, elem.col, elem.val), elem.row, elem.col)
 
+    def subs_little_circle(self):
+        for row in self.matrix:
+            for elem in row:
+                if type(elem) is LittleCircle:
+                    self.matrix[elem.row][elem.col] = None
+        self.add_random_little_circles()
+        if self.score > 0:
+            self.score -= 5
+
     def check_lose(self):
         return not self.none_count()
 
@@ -59,13 +83,14 @@ class Field:
 
     def delete_circle(self, circle: Circle):
         self.matrix[circle.row][circle.col] = None
+        self.score += 2
 
     def move_circle(self, circle: Circle, new_row, new_col):
         if self.has_ways(circle, new_row, new_col):
             if type(self.matrix[new_row][new_col]) is not Circle:
                 tmp_circle = circle.__copy__()
                 self.add_circle(tmp_circle, new_row, new_col)
-                self.delete_circle(circle)
+                self.matrix[circle.row][circle.col] = None
 
     def get_nei_list(self, row, col):
         nei_list = []
@@ -104,12 +129,21 @@ class Field:
     def has_ways(self, circle: Circle, new_row: int, new_col: int):
         return self.find_way(circle.row, circle.col, new_row, new_col)
 
+    def score_count(self, hor_friends, ver_friends):
+        need_len = 5
+        koef = 8
+        fr_list = [hor_friends, ver_friends]
+        for elem in fr_list:
+            if len(elem) - need_len > 0:
+                self.score += koef*(len(elem) - need_len)
+
     def check_delete(self, circle):
         return self.check_hor_ver(circle) or self.check_dial_ver(circle)
 
     def check_hor_ver(self, circle):
         hor_friends = self.find_hor_friends(circle)
         ver_friends = self.find_ver_friends(circle)
+        self.score_count(hor_friends, ver_friends)
         if len(ver_friends) >= 5:
             if len(hor_friends) >= 5:
                 hor_friends.remove(circle)
@@ -127,6 +161,7 @@ class Field:
     def check_dial_ver(self, circle):
         pos_friends = self.find_pos_dial_friends(circle)
         neg_friends = self.find_neg_dial_friends(circle)
+        self.score_count(pos_friends, neg_friends)
         if len(neg_friends) >= 5:
             if len(pos_friends) >= 5:
                 pos_friends.remove(circle)
@@ -208,3 +243,18 @@ class Field:
                 if type(elem) is LittleCircle:
                     lc.append((elem.row, elem.col))
         return lc
+
+    @staticmethod
+    def copy_matrix(matrix):
+        copy_matr = []
+        for row in matrix:
+            one_row = []
+            for elem in row:
+                if elem is None:
+                    one_row.append(None)
+                else:
+                    one_row.append(elem.__copy__())
+            copy_matr.append(one_row)
+        return copy_matr
+
+

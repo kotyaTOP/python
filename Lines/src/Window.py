@@ -40,3 +40,10 @@ class MyWindow(QMainWindow):
             return 0
         self.update()
 
+    def keyPressEvent(self, e):
+        if e.key() in (ord('r'), ord('R'), ord('к'), ord('К')):
+            self.presenter.field.subs_little_circle()
+        if e.key() in (ord('a'), ord('A'), ord('ф'), ord('Ф')):
+            self.presenter.cancel_turn()
+        self.paintEvent(None)
+        self.update()

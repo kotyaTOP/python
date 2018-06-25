@@ -19,7 +19,8 @@ class Presenter:
         self.i_top = 40
         self.i_data = dict()
         self.__init_data()
-        self.score = 0
+        self.prev_matrix = self.field.copy_matrix(self.field.matrix)
+        self.prev_score = self.field.score
 
     def __init_data(self):
         self.i_data['b1'] = QImage(os.path.join(os.path.dirname(__file__), '..', 'resources', 'b1.png'))
@@ -50,9 +51,18 @@ class Presenter:
         col.setNamedColor('#00FFFF')
         painter.setPen(col)
         height = QFontMetrics.height(painter.fontMetrics())
-        str_score = 'Score:  ' + str(self.score)
+        str_score = 'Score:  ' + str(self.field.score)
         width = QFontMetrics.width(painter.fontMetrics(), str_score)
-        painter.drawText((size.width() - width) / 2, height, str_score)
+        painter.drawText((size.width() - width) // 2, height, str_score)
+        col.setNamedColor('#FF0F00')
+        painter.setPen(col)
+        painter.setFont(QFont('Decorative', 10))
+        str_cancel = " 'a' - cancel turn"
+        str_subs = " 'r' - subs future circles"
+        height = QFontMetrics.height(painter.fontMetrics())
+        width = QFontMetrics.width(painter.fontMetrics(), str_subs)
+        painter.drawText(0, height * 2, str_cancel)
+        painter.drawText(size.width() - width, height * 2, str_subs)
         for y, row in enumerate(self.field.matrix):
             for x, elem in enumerate(row):
                 rect = QRect(self.i_size * x, self.i_size * y + self.i_top, self.i_size, self.i_size)
@@ -76,16 +86,19 @@ class Presenter:
             if self.count_select() == 1:
                 circle = self.get_select_circle()
                 if self.field.has_ways(circle, row, col):
+                    self.prev_matrix = self.field.copy_matrix(self.field.matrix)
+                    self.prev_score = self.field.score
                     self.field.move_circle(circle, row, col)
                     circle.select = False
                     if not self.field.check_delete(self.field.matrix[row][col]):
                         little_circle = self.field.get_little_circle()
                         self.field.add_random_little_circles()
                         for elem in little_circle:
-                            if self.field.check_delete(self.field.matrix[elem[0]][elem[1]]):
-                                self.score += 10
-                    else:
-                        self.score += 10
+                            self.field.check_delete(self.field.matrix[elem[0]][elem[1]])
+
+    def cancel_turn(self):
+        self.field.matrix = self.field.copy_matrix(self.prev_matrix)
+        self.field.score = self.prev_score
 
     def select_circle(self, circle: Circle):
         if self.count_select() == 0:
