@@ -1,7 +1,7 @@
 from random import randint
 import networkx as nx
 from math import sin, cos, pi
-from src.Circle import *
+from Circle import *
 
 
 class Field:
