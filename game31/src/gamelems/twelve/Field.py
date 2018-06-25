@@ -94,7 +94,7 @@ class Field:
                 nei_list.append([neighbour_row, neighbour_col])
         return nei_list
 
-    def __add_nodes(self):
+    def add_nodes(self):
         g = nx.Graph()
         for x, row in enumerate(self.matrix):
             for y, elem in enumerate(row):

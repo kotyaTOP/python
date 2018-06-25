@@ -52,3 +52,9 @@ class Presenter:
             return self.model.matrix[real_x][real_y]
         except IndexError:
             return None
+
+    def recolor(self):
+        self.model.recolor()
+
+    def is_win(self):
+        return len(self.model.matrix) == 0

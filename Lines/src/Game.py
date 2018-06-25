@@ -16,20 +16,6 @@ class Field:
         self.add_little_circle()
         self.add_random_little_circles()
 
-    def create_matrix(self):
-        for r in range(self.row_count):
-            one_row = []
-            for c in range(self.col_count):
-                one_row.append(None)
-            self.matrix.append(one_row)
-
-    def none_count(self):
-        count = 0
-        for row in self.matrix:
-            for elem in row:
-                if elem is None:
-                    count += 1
-        return count
 
     def add_random_little_circles(self):
         self.transform_little_circle()
