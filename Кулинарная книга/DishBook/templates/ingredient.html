@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ингредиенты</title>
+</head>
+<body>
+{% include 'menu.html' %}
+<div class="container">
+    <h2>Список ингредиентов</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Ингредиент</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for g in ingred %}
+        <tr>
+            <td>{{ g.ingred_name }}</td>
+            <td> <a href="{{url_for('change_ingred', id=g.id_ingred, do='change')}}">Изменить</a></td>
+            <td> <a href="{{url_for('change_ingred', id=g.id_ingred, do='delete')}}">Удалить</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+     <div>
+        <a href="{{url_for('change_ingred', id='0', do='add')}}">Добавить ингредиент</a>
+    </div>
+</div>
+</body>
+</html>

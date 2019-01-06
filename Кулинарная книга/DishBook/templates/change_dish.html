@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+    {% from "_macros_bootstrap" import bootstrap_form_input, bootstrap_form_button with context %}
+    <meta charset="UTF-8">
+    <title>Блюдо</title>
+</head>
+<body>
+    {% include 'menu.html' %}
+    <div class="container">
+        <h2>Информация о блюде</h2>
+        <form method="post" id="DishForm">
+           {{ bootstrap_form_input(form.dish_name) }}
+           {{ bootstrap_form_input(form.recipe) }}
+           {{ bootstrap_form_input(form.time) }}
+           {{ bootstrap_form_button(form.button_save, class_="btn btn-success") }}
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Блюда</title>
+</head>
+<body>
+{% include 'menu.html' %}
+<div class="container">
+    <h2>Список блюд</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Блюдо</th>
+            <th>Рецепт</th>
+            <th>Время</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for g in dishes %}
+        <tr>
+            <td>{{ g.dish_name }}</td>
+            <td>{{ g.recipe }}</td>
+            <td>{{ g.time }}</td>
+            <td> <a href="{{url_for('change_dish', id=g.id_dish, do='change')}}">Изменить</a></td>
+            <td> <a href="{{url_for('change_dish', id=g.id_dish, do='delete')}}">Удалить</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+       <div>
+            <a href="{{url_for('change_dish', id='0', do='add')}}">Добавить блюдо</a>
+        </div>
+</div>
+</body>
+</html>
