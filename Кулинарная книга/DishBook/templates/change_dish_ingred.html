@@ -9,9 +9,9 @@
     <div class="container">
         <h2>Информация о блюде с ингридиентами</h2>
         <form method="post" id="DishForm">
-           {{ bootstrap_form_input(form.dish_name) }}
-           {{ bootstrap_form_input(form.id_ingred) }}
-           {{ bootstrap_form_input(form.id_unit) }}
+           {{ bootstrap_form_input(form.dish) }}
+           {{ bootstrap_form_input(form.ingred) }}
+           {{ bootstrap_form_input(form.unit) }}
            {{ bootstrap_form_input(form.sum) }}
            {{ bootstrap_form_button(form.button_save, class_="btn btn-success") }}
         </form>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+    {% from "_macros_bootstrap" import bootstrap_form_input, bootstrap_form_button with context %}
+    <meta charset="UTF-8">
+    <title>Блюда</title>
+</head>
+<body>
+{% include 'menu.html' %}
+<div class="container">
+    <h2>Список блюд</h2>
+    <form method="get" id="formDish">
+        {{ bootstrap_form_input(form.sum)}}
+        {{ bootstrap_form_button(form.button_search2) }}
+        <table>
+            <tr>
+                {% for g in form.ingred %}
+            <td>{{g}}
+                {% endfor %}
+
+            </tr>
+
+        </table>
+        {{ bootstrap_form_button(form.button_search3) }}
+        <table>
+            <tr>
+                <td>{{ bootstrap_form_input(form.dish_name) }}</td>
+
+                <!--<td><input type="text" id="inputN"></td>-->
+
+            </tr>
+            <tr>
+                <td> {{ bootstrap_form_button(form.button_search1) }}</td>
+
+                <!--<td> <a href="{{url_for('search_dish', id='0', do='change')}}">Изменить</a></td>-->
+            </tr>
+        </table>
+    </form>
+    <table>
+        <thead>
+        <tr>
+            <th align="left">Блюдо</th>
+            <th>Рецепт</th>
+            <th align="left">Список ингредиентов</th>
+            <th align="right">Время приготовления</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for g in dish %}
+        <tr>
+            <td>{{ g.dish.dish_name }}</td>
+            <td align="center">{{ g.dish.recipe }}</td>
+
+            <td align="right"> {% for e in ingreds[g.id_dish] %} <br> {{ e }}  {% endfor %}</td>
+
+            <td align="right">{{ g.dish.time }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -23,6 +23,8 @@
             <td>{{ g.ingred.ingred_name }}</td>
             <td>{{ g.sum }}</td>
             <td>{{ g.unit.unit_name }}</td>
+            <td> <a href="{{url_for('change_dish_ingred', id=g.id_dish_ingred, do='change')}}">Изменить</a></td>
+            <td> <a href="{{url_for('change_dish_ingred', id=g.id_dish_ingred, do='delete')}}">Удалить</a></td>
         </tr>
         {% endfor %}
         </tbody>
