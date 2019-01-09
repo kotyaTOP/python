@@ -57,6 +57,7 @@ class DishIngredForm(ModelForm):
 class FormSearch(Form):
     dish_name = StringField('Название блюда')
     sum = IntegerField("Количество ингредиентов")
+    ingred_name=StringField("Имя ингредиента")
     ingred_names = StringField('Список ингредиентов (через пробел)')
     # ingred = QuerySelectField('Ингредиент',
     #                           query_factory=lambda: mydb.session.query(Ingredient).all(),

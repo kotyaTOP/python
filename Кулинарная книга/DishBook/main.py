@@ -25,14 +25,53 @@ def dish():
 @app.route('/ingredient')
 def ingredient():
     ingreds = mydb.session.query(Ingredient).all()
-    return render_template('ingredient.html', ingred=ingreds)
+    form = FormSearch(request.args)
+    if form.button_search1.data:
+        q = mydb.session.query(Ingredient)
+        if form.ingred_name.data != '':
+            q = q.filter(Ingredient.ingred_name == form.ingred_name.data)
+        ingreds = q.all()
+    return render_template('ingredient.html', ingred=ingreds, form=form)
 
 
 @app.route('/dish_ingred')
 def dish_ingred():
     dish_ingred = mydb.session.query(Dish_Ingredient).all()
-    return render_template('dish_ingred.html', dish_ingred=dish_ingred)
+    form = FormSearch(request.args)
+    if form.button_search1.data:
+        # q = mydb.session.query(Dish_Ingredient)
+        dish_name = form.dish_name.data
+        ingred_name = form.ingred_name.data
+        print(dish_name)
+        print(ingred_name)
+        if len(dish_name)>0 and len(ingred_name) > 0:
+            # q = q.filter(Dish_Ingredient.ingred.ingred_name == ingred_name and Dish_Ingredient.dish.dish_name == dish_name)
+            dish = mydb.session.query(Dish).filter(Dish.dish_name == dish_name).all()[0]
+            print(dish)
+            ingred = mydb.session.query(Ingredient).filter(Ingredient.ingred_name == ingred_name).all()[0]
+            dish_ingred = find_dish_ingred(dish=dish, ingred=ingred)
+        else:
+            if len(dish_name)>0 :
+                dish = mydb.session.query(Dish).filter(Dish.dish_name == dish_name).all()[0]
+                dish_ingred = find_dish_ingred(dish=dish)
+            if len(ingred_name) :
+                ingred = mydb.session.query(Ingredient).filter(Ingredient.ingred_name == ingred_name).all()[0]
+                dish_ingred = find_dish_ingred(ingred=ingred)
+    return render_template('dish_ingred.html', dish_ingred=dish_ingred, form=form)
 
+def find_dish_ingred(dish=None, ingred=None):
+    q = mydb.session.query(Dish_Ingredient).all()
+    answer = []
+    for elem in q:
+        if dish is not None and ingred is not None:
+            if elem.id_dish == dish.id_dish and elem.id_ingred == ingred.id_ingred:
+                answer.append(elem)
+        else:
+            if dish is not None and elem.id_dish == dish.id_dish:
+                answer.append(elem)
+            if ingred is not None and elem.id_ingred == ingred.id_ingred:
+                answer.append(elem)
+    return answer
 
 @app.route('/unit')
 def unit():
