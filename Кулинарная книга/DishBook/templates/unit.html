@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Единицы измерения</title>
 </head>
 <body>
 {% include 'menu.html' %}
 <div class="container">
     <h2>Единицы измерения</h2>
-    <table>
+
+    <div>
+        <a class="a1" href="{{url_for('change_unit', id='0', do='add')}}">Добавить единицу измерения</a>
+    </div>
+    <table class="table_price">
         <thead>
         <tr>
-            <th>Единицы измерения</th>
+            <th class="th1">Единицы измерения</th>
         </tr>
         </thead>
         <tbody>
         {% for g in units %}
         <tr>
-            <td>{{ g.unit_name }}</td>
-            <td><a href="{{url_for('change_unit', id=g.id_unit, do='change')}}">Изменить</a></td>
-            <td><a href="{{url_for('change_unit', id=g.id_unit, do='delete')}}">Удалить</a></td>
+            <td class="td1">{{ g.unit_name }}</td>
+            <td class="td1"><a href="{{url_for('change_unit', id=g.id_unit, do='change')}}">Изменить</a></td>
+            <td class="td1"><a href="{{url_for('change_unit', id=g.id_unit, do='delete')}}">Удалить</a></td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
-    <div>
-        <a href="{{url_for('change_unit', id='0', do='add')}}">Добавить единицу измерения</a>
-    </div>
 </div>
 </body>
 </html>

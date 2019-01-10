@@ -1,10 +1,12 @@
 <script type="text/javascript" src="/static/jquery/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/static/bootstrap/bootstrap.min.js"></script>
-<a href="{{ url_for('beauty_dish') }}">Красиво блюдо</a>
-<a href="{{ url_for('dish') }}">Блюда</a>
-<a href="{{ url_for('ingredient') }}">Ингредиенты</a>
-<a href="{{ url_for('dish_ingred') }}">Блюда и ингредиенты</a>
-<a href="{{ url_for('unit') }}">Единицы измерения</a>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<a class="menu" href="{{ url_for('beauty_dish') }}">Красиво блюдо</a>
+<a class="menu" href="{{ url_for('dish') }}">Блюда</a>
+<a class="menu" href="{{ url_for('ingredient') }}">Ингредиенты</a>
+<a class="menu" href="{{ url_for('dish_ingred') }}">Блюда и ингредиенты</a>
+<a class="menu" href="{{ url_for('unit') }}">Единицы измерения</a>
+<a class="menu" href="{{ url_for('stat') }}">Статистика</a>
 
 
 

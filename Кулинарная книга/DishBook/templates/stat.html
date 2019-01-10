@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+    {% from "_macros_bootstrap" import bootstrap_form_input, bootstrap_form_button with context %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta charset="UTF-8">
+    <title>Статистика</title>
+</head>
+<body>
+
+{% include 'menu.html' %}
+<h2>Статистика</h2>
+<div class="container">
+    <form method="get" id="formDish">
+        <table class="table1">
+            <td class="td1">
+                {{ bootstrap_form_button(form.button_search4) }}
+            </td>
+        </table>
+
+        <table class="table1">
+        <thead>
+        <tr>
+            <th class="th1">Блюдо</th>
+            <th class="th1">Количество</th>
+            <th class="th1">Блюдо с наибольшим количеством</th>
+            <th class="th1">Блюдо с наименьшим количеством</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for g in dish %}
+        <tr>
+            <td  class="td1">{{ g.dish_name }}</td>
+            <td  class="td1" align="center">{{ stat_list[g.dish_name][0]}}</td>
+            <td  class="td1" align="center"><b>{{ stat_list[g.dish_name][1]}}</b></td>
+            <td  class="td1" align="center"><b>{{ stat_list[g.dish_name][2]}}</b></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </table>
+    </form>
+
+</div>
+</body>
+
+</html>

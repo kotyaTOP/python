@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
     {% from "_macros_bootstrap" import bootstrap_form_input, bootstrap_form_button with context %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <meta charset="UTF-8">
     <title>Ингредиенты</title>
 </head>
@@ -9,32 +10,32 @@
 <div class="container">
     <h2>Список ингредиентов</h2>
     <form method="get" id="formDish">
-        <table>
+        <table class="table1">
             <tr>
-                <td>{{ bootstrap_form_input(form.ingred_name) }}</td>
-                <td> {{ bootstrap_form_button(form.button_search1) }}</td>
+                <td class="td1">{{ bootstrap_form_input(form.ingred_name) }}</td>
+                <td class="td1"> {{ bootstrap_form_button(form.button_search1) }}</td>
             </tr>
         </table>
     </form>
-    <table>
+     <div>
+        <a class="a1" href="{{url_for('change_ingred', id='0', do='add')}}">Добавить ингредиент</a>
+    </div>
+    <table class="table_price">
         <thead>
         <tr>
-            <th>Ингредиент</th>
+            <th class="th1">Ингредиент</th>
         </tr>
         </thead>
         <tbody>
         {% for g in ingred %}
         <tr>
-            <td>{{ g.ingred_name }}</td>
-            <td> <a href="{{url_for('change_ingred', id=g.id_ingred, do='change')}}">Изменить</a></td>
-            <td> <a href="{{url_for('change_ingred', id=g.id_ingred, do='delete')}}">Удалить</a></td>
+            <td class="td1">{{ g.ingred_name }}</td>
+            <td class="td1"> <a href="{{url_for('change_ingred', id=g.id_ingred, do='change')}}">Изменить</a></td>
+            <td class="td1"> <a href="{{url_for('change_ingred', id=g.id_ingred, do='delete')}}">Удалить</a></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-     <div>
-        <a href="{{url_for('change_ingred', id='0', do='add')}}">Добавить ингредиент</a>
-    </div>
 </div>
 </body>
 </html>

@@ -1,44 +1,46 @@
 <!DOCTYPE html>
 <head>
     {% from "_macros_bootstrap" import bootstrap_form_input, bootstrap_form_button with context %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <meta charset="UTF-8">
     <title>Блюда</title>
 </head>
 <body>
 {% include 'menu.html' %}
 <div class="container">
-    <h2>Список блюд</h2>
+    <h1>Список блюд</h1>
     <form method="get" id="formDish">
-        <table>
+        <table class="table1">
             <tr>
-                <td>{{ bootstrap_form_input(form.dish_name) }}</td>
-                <td> {{ bootstrap_form_button(form.button_search1) }}</td>
+                <td class="td1">{{ bootstrap_form_input(form.dish_name) }}</td>
+                <td class="td1"> {{ bootstrap_form_button(form.button_search1) }}</td>
             </tr>
         </table>
     </form>
-    <table>
+    <div>
+            <a class="a1" href="{{url_for('change_dish', id='0', do='add')}}">Добавить блюдо</a>
+        </div>
+    <table class="table_price">
         <thead>
         <tr>
-            <th>Блюдо</th>
-            <th>Рецепт</th>
-            <th>Время</th>
+            <th class="th1">Блюдо</th>
+            <th class="th1">Рецепт</th>
+            <th class="th1">Время</th>
         </tr>
         </thead>
         <tbody>
         {% for g in dishes %}
         <tr>
-            <td>{{ g.dish_name }}</td>
-            <td>{{ g.recipe }}</td>
-            <td>{{ g.time }}</td>
-            <td> <a href="{{url_for('change_dish', id=g.id_dish, do='change')}}">Изменить</a></td>
-            <td> <a href="{{url_for('change_dish', id=g.id_dish, do='delete')}}">Удалить</a></td>
+            <td class="td1">{{ g.dish_name }}</td>
+            <td class="td1">{{ g.recipe }}</td>
+            <td class="td1">{{ g.time }}</td>
+            <td class="td1"> <a href="{{url_for('change_dish', id=g.id_dish, do='change')}}">Изменить</a></td>
+            <td class="td1"> <a href="{{url_for('change_dish', id=g.id_dish, do='delete')}}">Удалить</a></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-       <div>
-            <a href="{{url_for('change_dish', id='0', do='add')}}">Добавить блюдо</a>
-        </div>
+
 </div>
 </body>
 </html>

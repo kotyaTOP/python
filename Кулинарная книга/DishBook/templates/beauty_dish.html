@@ -1,58 +1,63 @@
 <!DOCTYPE html>
 <head>
     {% from "_macros_bootstrap" import bootstrap_form_input, bootstrap_form_button with context %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="/static/bootstrap/bootstrap.min.css" type="text/css" media="screen"/>
     <meta charset="UTF-8">
+    <style>
+        /*body{*/
+            /*background: url("https://png.pngtree.com/element_origin_min_pic/12/03/20/1656e402325b271.jpg") ;*/
+        /*}*/
+    </style>
     <title>Блюда</title>
 </head>
 <body>
+<!--<img src="https://pp.userapi.com/c638123/v638123601/53f84/6BciygncB5g.jpg">-->
 {% include 'menu.html' %}
 <div class="container">
-    <h2>Список блюд</h2>
+    <h1>Список блюд</h1>
     <form method="get" id="formDish">
-        {{ bootstrap_form_input(form.sum)}}
-        {{ bootstrap_form_button(form.button_search2) }}
-        <table>
-            <tr>
-                {% for g in form.ingred %}
-            <td>{{g}}
-                {% endfor %}
+        <table class="table1">
+            <tbody>
+        <td class="td1">{{ form.ingreds }}
 
-            </tr>
+        {{ bootstrap_form_button(form.button_search2_add) }}
+        {% if form.ingreds|length > 0  %}
+            {{ form.button_search2_remove }}
+        {% endif %}
+        <br/>
+        {{ form.button_search3 }}
+        </td>
 
-        </table>
-        {{ bootstrap_form_button(form.button_search3) }}
-        <table>
-            <tr>
-                <td>{{ bootstrap_form_input(form.dish_name) }}</td>
+            <td class="td1">{{ bootstrap_form_input(form.dish_name) }}
 
                 <!--<td><input type="text" id="inputN"></td>-->
 
-            </tr>
-            <tr>
-                <td> {{ bootstrap_form_button(form.button_search1) }}</td>
+            {{ bootstrap_form_button(form.button_search1) }}</td>
+            </tbody>
 
                 <!--<td> <a href="{{url_for('search_dish', id='0', do='change')}}">Изменить</a></td>-->
-            </tr>
+
         </table>
     </form>
-    <table>
+    <table class="table1">
         <thead>
         <tr>
-            <th align="left">Блюдо</th>
-            <th>Рецепт</th>
-            <th align="left">Список ингредиентов</th>
-            <th align="right">Время приготовления</th>
+            <th class="th1" align="left">Блюдо</th>
+            <th class="th1" align="center">Рецепт</th>
+            <th class="th1" align="left">Список ингредиентов</th>
+            <th class="th1" align="right">Время приготовления</th>
         </tr>
         </thead>
         <tbody>
         {% for g in dish %}
         <tr>
-            <td>{{ g.dish.dish_name }}</td>
-            <td align="center">{{ g.dish.recipe }}</td>
+            <td  class="td1">{{ g.dish.dish_name }}</td>
+            <td  class="td1" align="center">{{ g.dish.recipe }}</td>
 
-            <td align="right"> {% for e in ingreds[g.id_dish] %} <br> {{ e }}  {% endfor %}</td>
+            <td  class="td1" align="right"> {% for e in ingreds[g.id_dish] %} <br> {{ e }}  {% endfor %}</td>
 
-            <td align="right">{{ g.dish.time }}</td>
+            <td  class="td1" align="right">{{ g.dish.time }}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
     {% from "_macros_bootstrap" import bootstrap_form_input, bootstrap_form_button with context %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <meta charset="UTF-8">
     <title>Единица измерения</title>
 </head>
@@ -9,8 +10,13 @@
     <div class="container">
         <h2>Информация о единицах</h2>
         <form method="post" id="UnitForm">
+            <table class="table1">
+                <td class="td1">
            {{ bootstrap_form_input(form.unit_name) }}
            {{ bootstrap_form_button(form.button_save, class_="btn btn-success") }}
+                </td>
+            </table>
+
         </form>
     </div>
 </body>

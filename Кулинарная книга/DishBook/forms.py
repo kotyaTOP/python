@@ -57,7 +57,7 @@ class DishIngredForm(ModelForm):
 class FormSearch(Form):
     dish_name = StringField('Название блюда')
     sum = IntegerField("Количество ингредиентов")
-    ingred_name=StringField("Имя ингредиента")
+    ingred_name = StringField("Имя ингредиента")
     ingred_names = StringField('Список ингредиентов (через пробел)')
     # ingred = QuerySelectField('Ингредиент',
     #                           query_factory=lambda: mydb.session.query(Ingredient).all(),
@@ -65,16 +65,27 @@ class FormSearch(Form):
     #                           get_label=lambda g: "%s" % (g.ingred_name))
     button_search3 = SubmitField('Поиск по ингредиентам')
     button_search1 = SubmitField('Поиск по названию')
-    button_search2 = SubmitField('Установить')
 
-    def set_ingred(self, k: int):
-        for i in range(k):
-            self.ingred = []
-            ing_tmp = QuerySelectField('Ингредиент',
-                              query_factory=lambda: mydb.session.query(Ingredient).all(),
-                              get_pk=lambda g: g.id_ingred,
-                              get_label=lambda g: "%s" % (g.ingred_name))
-            self.ingred.append(ing_tmp)
+    button_search2_add = SubmitField('+')
+    button_search2_remove = SubmitField('-')
+
+    ingreds = FieldList(QuerySelectField('Ингредиент',
+                                         query_factory=lambda: mydb.session.query(Ingredient).all(),
+                                         get_pk=lambda g: g.id_ingred,
+                                         get_label=lambda g: "%s" % (g.ingred_name)))
+
+
+    button_search4 = SubmitField('Получить статистику')
+    button_search5 = SubmitField('Получить статистику')
+
+    # def set_ingred(self, k: int):
+    #     for i in range(k):
+    #         self.ingred = []
+    #         ing_tmp = QuerySelectField('Ингредиент',
+    #                           query_factory=lambda: mydb.session.query(Ingredient).all(),
+    #                           get_pk=lambda g: g.id_ingred,
+    #                           get_label=lambda g: "%s" % (g.ingred_name))
+    #         self.ingred.append(ing_tmp)
 
 
 

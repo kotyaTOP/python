@@ -1,0 +1,127 @@
+h1 {
+  color: #FFFFE0;
+  font-size: 80px;
+  font-weight: 900;
+  background-color: rgba(128, 0, 0, 0.7);
+  display: inline-block;
+  transform: translateY(-40%);
+  margin-left: 30%;
+  font-family: "Monaco", "Courier", monospace;
+  /*padding-bottom: 20px;*/
+  /*margin-top: 20px;*/
+}
+h2 {
+  color: #FFFFE0;
+  font-size: 50px;
+  font-weight: 900;
+  background-color: rgba(128, 0, 0, 0.7);
+  display: inline-block;
+  font-family: "Monaco", "Courier", monospace;
+  /*padding-bottom: 20px;*/
+  /*margin-top: 20px;*/
+}
+body{
+  padding-left: 8px;
+  background: url("шаурма.jpg");
+  /*background-size: cover;*/
+}
+.table1 {
+font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+text-align: left;
+border-collapse: separate;
+border-spacing: 5px;
+background: rgba(0,0,0,0.6);
+color: #FFFFE0;
+border: 16px solid rgba(128, 0,0, 0.6);
+border-radius: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.th1 {
+font-size: 25px;
+padding: 10px;
+}
+.td1 {
+  font-size: 18px;
+background: rgba(128,0,0,0.8);
+padding: 10px;
+}
+.menu{
+  color: #800000;
+  font-size: 40px;
+  font-weight: 900;
+  background-color: rgba(222, 184, 135, 0.6);
+  /*font-family: "Monaco", "Courier", monospace;*/
+}
+
+a{
+  text-decoration: none;
+}
+
+a:visited {
+    color: #800000;
+  text-decoration: none;
+}
+a:active {
+    color: #800000;
+  text-decoration: none;
+}
+
+select {
+  margin: 20px;
+  width: 250px;
+  padding: 5px 35px 5px 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  height: 40px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  color: maroon;
+  font-weight: 900;
+  background: url(http://image.flaticon.com/icons/png/512/251/251910.png) 96% / 15% no-repeat #eee;
+}
+
+.table_price {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+text-align: left;
+border-collapse: separate;
+border-spacing: 5px;
+background: rgba(0,0,0,0.6);
+color: #FFFFE0;
+border: 16px solid rgba(128, 0,0, 0.6);
+border-radius: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+ }
+
+.table_price td:last-of-type {
+  text-align: center;
+}
+.table_price a {
+  display: inline-block;
+  padding: 5px 10px;
+  background: #F79361;
+  /*box-shadow: 2px 2px 0 0 #a22800;*/
+  position: relative;
+}
+.table_price a:hover {
+  box-shadow: none;
+  top: 2px;
+  left: 2px;
+}
+
+.a1 {
+  display: inline-block;
+  padding: 5px 10px;
+  background: #F79361;
+  /*box-shadow: 2px 2px 0 0 #a22800;*/
+  position: relative;
+  font-size: 30px;
+}
+.a1:hover {
+  box-shadow: none;
+  top: 2px;
+  left: 2px;
+}

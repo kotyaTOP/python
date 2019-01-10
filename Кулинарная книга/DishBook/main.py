@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for
 from models import Dish, Ingredient, Unit, Dish_Ingredient
 from app_config import app, mydb
 from forms import DishForm, IngredForm, UnitForm, DishIngredForm, FormSearch
+import json
 
 
 @app.route('/')
@@ -73,6 +74,58 @@ def find_dish_ingred(dish=None, ingred=None):
                 answer.append(elem)
     return answer
 
+@app.route('/stat')
+def stat():
+    form=FormSearch(request.args)
+    if form.button_search4.data:
+        dish_ingred = mydb.session.query(Dish_Ingredient).all()
+        dish = mydb.session.query(Dish).all()
+        ingred_dict = get_ingreds_for_dishes(dish, dish_ingred)
+
+        stat_list=set_stat_data(ingred_dict)
+        # stat_list = json.dumps(set_stat_data(ingred_dict))
+
+        return render_template('stat.html', form=form, dish=dish, stat_list=stat_list)
+
+    return render_template('stat.html', form=form)
+
+def set_stat_data(ingred_dict : dict):
+    stat_dict = {}
+    sorted_val = get_sorted(ingred_dict)
+    max = len(sorted_val[len(sorted_val) - 1])
+    min = len(sorted_val[0])
+    print(sorted_val)
+    max_list = get_keys_from_value(ingred_dict, max)
+    min_list = get_keys_from_value(ingred_dict, min)
+    print(max_list)
+    for dish in ingred_dict.keys():
+        if dish.dish_name not in stat_dict.keys():
+            stat_dict[dish.dish_name] = [None, None, None]
+        stat_dict[dish.dish_name][0] = len(ingred_dict[dish])
+        if dish in max_list:
+            stat_dict[dish.dish_name][1] = "<-"
+        else:
+            stat_dict[dish.dish_name][1] = ' '
+        if dish in min_list:
+            stat_dict[dish.dish_name][2] = "<-"
+        else:
+            stat_dict[dish.dish_name][2] = ' '
+    return stat_dict
+
+def get_sorted(stat_list: dict):
+    return sorted(stat_list.values(), key=len)
+
+def sort_by_len(elem):
+    return len(elem)
+
+def get_keys_from_value(input_dict: dict, val):
+    keys = []
+
+    for k, v in input_dict.items():
+        if len(v) == val:
+            keys.append(k)
+    return keys
+
 @app.route('/unit')
 def unit():
     units = mydb.session.query(Unit).all()
@@ -122,26 +175,18 @@ def beauty_dish():
         dish_id = [elem.id_dish for elem in dish]
         dishes = get_dish_ingred(dish_id)
 
-    if form.button_search2.data:
-        if form.sum.data is not None:
-            s = form.sum.data
-            # sum = [i for i in range(s)]
-            form.set_ingred(int(s))
-            print(form.ingred)
-            return render_template('beauty_dish.html', form=form)
 
+    ingreds = []
     if form.button_search3.data:
-        print(form.ingred.data)
-        # q = mydb.session.query(Dish_Ingredient)
-        # if form.ingred_names.data != '':
-        #     ingreds_id = [int(elem) for elem in form.ingred_names.data.split(sep=',')]
-        #
-        #     print(ingreds_id)
-        #
-        #     q = get_min_dishes(ingreds_id)
-        # dish = q
-        # dish_id = [elem.id_dish for elem in dish]
-        # dishes = get_dish_ingred(dish_id)
+        for f_ingred in form.ingreds:
+            ingred = f_ingred.data
+            if ingred not in ingreds:
+                ingreds.append(ingred)
+        if len(ingreds):
+            dish = get_min_dishes(ingreds)
+            print(dish)
+            dish_id = [elem.id_dish for elem in dish]
+            dishes = get_dish_ingred(dish_id)
     dishes_id = []
     new_dishes = []
     ingreds = {}
@@ -151,33 +196,53 @@ def beauty_dish():
             dishes_id.append(dish.id_dish)
         if not ingreds.keys().__contains__(dish.id_dish):
             ingreds[dish.id_dish] = []
+
         ingreds[dish.id_dish].append(str(dish.ingred.ingred_name) + ' - ' + str(dish.sum) + str(dish.unit.unit_name))
+
+    if form.button_search2_add.data:
+        form.ingreds.append_entry()
+        return render_template('beauty_dish.html', dish=new_dishes, ingreds=ingreds, form=form)
+
+    if form.button_search2_remove.data:
+        form.ingreds.pop_entry()
+        return render_template('beauty_dish.html', dish=new_dishes, ingreds=ingreds, form=form)
+
 
     return render_template('beauty_dish.html', dish=new_dishes, ingreds=ingreds, form=form)
 
-def get_min_dishes(max_ingreds_id : list):
+def get_min_dishes(ingreds : list):
     all_dishes = mydb.session.query(Dish_Ingredient)
     dishes = mydb.session.query(Dish)
-    ingreds_dict = {}
-    for dish in dishes:
-        if not ingreds_dict.keys().__contains__(dish.id_dish):
-            ingreds_dict[dish.id_dish] = []
-    print(all_dishes)
-    for dish in all_dishes:
-        ingreds_dict[dish.id_dish].append(dish.id_ingred)
+    ingreds_dict = get_ingreds_for_dishes(dishes, all_dishes)
     min_dishes = []
-    for dish_id in ingreds_dict.keys():
-        if contains(ingreds_dict[dish_id], max_ingreds_id):
-            min_dishes.append(dish_id)
+    ingreds = [elem.id_ingred for elem in ingreds]
+    for dish in ingreds_dict.keys():
+        if contains(ingreds_dict[dish], ingreds):
+            min_dishes.append(dish.id_dish)
+    print('min dishes ')
     print(min_dishes)
     return get_dish_ingred(min_dishes)
+
+def get_ingreds_for_dishes(dishes: list, dishes_ingreds: list):
+    ingreds_dict = {}
+    for dish in dishes:
+        if not ingreds_dict.keys().__contains__(dish):
+            ingreds_dict[dish] = []
+    for dish in dishes_ingreds:
+        ingreds_dict[dish.dish].append(dish.id_ingred)
+    return ingreds_dict
 
 def get_dish_ingred(dishes_id: list):
     new_dish_ingreds = []
     dish_ingreds = mydb.session.query(Dish_Ingredient).all()
+    print(dish_ingreds)
     for elem in dish_ingreds:
-        if dishes_id.__contains__(elem.id_dish):
+        print(elem)
+        print(elem.id_dish)
+        print(dishes_id)
+        if elem.id_dish in dishes_id:
             new_dish_ingreds.append(elem)
+    print(new_dish_ingreds)
     return new_dish_ingreds
 
 def contains(minlist: list, list: list):
